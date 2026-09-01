@@ -4,18 +4,23 @@
 <style>
 body{background:#0a0e17;color:#e8e8e8;font-family:Inter,system-ui,sans-serif;margin:0;padding:32px 20px}
 .wrap{max-width:760px;margin:0 auto}
-h1{font-size:22px}h1 span{color:#00ff9d}
-p.sub{color:#8a93a3;font-size:13px;font-family:monospace}
+h1{font-size:22px;margin:0}h1 span{color:#00ff9d}
+p.sub{color:#8a93a3;font-size:12.5px;font-family:ui-monospace,monospace;margin:8px 0 22px}
 .empty{border:1px dashed #2a3140;border-radius:14px;padding:40px;text-align:center;color:#5c6470;font-family:monospace;font-size:13px}
 .proj{display:flex;align-items:center;gap:14px;background:#111726;border:1px solid #232b3a;border-radius:14px;padding:16px 18px;margin:12px 0;text-decoration:none;transition:.15s}
 .proj:hover{border-color:#00ff9d;transform:translateY(-1px)}
-.fav{font-size:22px}.t{flex:1}.t b{display:block;color:#fff;font-size:15px}
-.t span{color:#8a93a3;font-size:12px;font-family:monospace}
-.go{color:#00ff9d;font-family:monospace;font-size:12px}
+.fav{font-size:22px}.t{flex:1;min-width:0}.t b{display:block;color:#fff;font-size:15px;margin-bottom:3px}
+.t span{color:#8a93a3;font-size:12px;font-family:ui-monospace,monospace;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.go{color:#00ff9d;font-family:ui-monospace,monospace;font-size:12px;text-align:right}
+.go small{display:block;color:#5c6470;font-size:10px;margin-top:3px}
 footer{margin-top:28px;color:#4a5262;font-size:11px;font-family:monospace;text-align:center}
 </style></head><body><div class="wrap">
 <h1>⚡ JEXI <span>Workspace</span></h1>
-<p class="sub">apps jexi builds land here — live previews, auto-cleaned when the project is done</p>
-<div class="empty">no projects yet — ask JEXI to build something and say "publish it"</div>
-<footer>maintained automatically by JEXI OS</footer>
+<p class="sub">1 project · apps jexi builds land here · auto-cleaned 24h after publish</p>
+<a class="proj" href="b188-selftest/">
+  <span class="fav">🧪</span>
+  <span class="t"><b>B188 Selftest App</b><span>verifies the workspace end-to-end</span></span>
+  <span class="go">OPEN →<br><small>24h left</small></span>
+</a>
+<footer>maintained automatically by JEXI OS · builds and previews only — this is not JEXI herself</footer>
 </div></body></html>
