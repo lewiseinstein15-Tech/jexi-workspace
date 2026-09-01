@@ -21,6 +21,16 @@
         "index.html"
       ],
       "publishedAt": "2026-09-01T18:50:39.608Z"
+    },
+    "build-me-a-weather-app": {
+      "title": "Build me a weather app",
+      "brief": "Build me a weather app",
+      "icon": "📦",
+      "entry": "index.html",
+      "files": [
+        "index.html"
+      ],
+      "publishedAt": "2026-09-01T18:56:23.066Z"
     }
   }
 }
