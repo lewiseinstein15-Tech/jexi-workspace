@@ -11,6 +11,16 @@
         "style.css"
       ],
       "publishedAt": "2026-09-01T10:51:38.953Z"
+    },
+    "give-me-the-preview-link": {
+      "title": "give me the preview link",
+      "brief": "give me the preview link",
+      "icon": "📦",
+      "entry": "index.html",
+      "files": [
+        "index.html"
+      ],
+      "publishedAt": "2026-09-01T18:50:39.608Z"
     }
   }
 }
