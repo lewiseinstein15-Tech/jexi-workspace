@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"UTF-8\">
+<title>Dice Roller</title>
+<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+<style>
+body{font-family:Arial,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;background:#f0f0f0;}
+#dice{font-size:8rem;margin:20px;}
+button{padding:10px 20px;font-size:1rem;border:none;border-radius:5px;background:#4CAF50;color:#fff;cursor:pointer;}
+button:hover{background:#45a049;}
+</style>
+</head>
+<body>
+<h1>Dice Roller</h1>
+<div id=\"dice\">🎲</div>
+<button type=\"button\" id=\"rollBtn\">Roll Dice</button>
+<script>
+const diceDiv=document.getElementById('dice');
+const rollBtn=document.getElementById('rollBtn');
+function rollDice(){
+  const result=Math.floor(Math.random()*6);
+  const diceFaces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+  diceDiv.textContent=diceFaces[result];
+}
+rollBtn.addEventListener('click',rollDice);
+</script>
+</body>
+</html>
