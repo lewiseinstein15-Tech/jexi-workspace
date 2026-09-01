@@ -1,15 +1,3 @@
 {
-  "projects": {
-    "b188-selftest": {
-      "title": "B188 Selftest App",
-      "brief": "verifies the workspace end-to-end",
-      "icon": "🧪",
-      "entry": "index.html",
-      "files": [
-        "index.html",
-        "README.md"
-      ],
-      "publishedAt": "2026-09-01T10:31:30.684Z"
-    }
-  }
+  "projects": {}
 }
