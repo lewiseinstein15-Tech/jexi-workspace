@@ -1,15 +1,5 @@
 {
   "projects": {
-    "build-me-a-tiny-dice": {
-      "title": "build me a tiny dice app as a web app",
-      "brief": "build me a tiny dice app as a web app",
-      "icon": "📦",
-      "entry": "index.html",
-      "files": [
-        "index.html"
-      ],
-      "publishedAt": "2026-09-01T19:14:16.514Z"
-    },
     "no-i-need-the-preview": {
       "title": "No I need the preview link",
       "brief": "No I need the preview link",
