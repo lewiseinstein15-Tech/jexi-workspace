@@ -1,15 +1,5 @@
 {
   "projects": {
-    "build-me-a-weather-app": {
-      "title": "Build me a weather app",
-      "brief": "Build me a weather app",
-      "icon": "📦",
-      "entry": "index.html",
-      "files": [
-        "index.html"
-      ],
-      "publishedAt": "2026-09-01T18:56:23.066Z"
-    },
     "build-me-a-tiny-dice": {
       "title": "build me a tiny dice app as a web app",
       "brief": "build me a tiny dice app as a web app",
