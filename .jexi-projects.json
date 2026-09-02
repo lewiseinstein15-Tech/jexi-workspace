@@ -1,17 +1,5 @@
 {
   "projects": {
-    "build-me-a-tiny-quote": {
-      "title": "build me a tiny quote app as a web app",
-      "brief": "build me a tiny quote app as a web app",
-      "icon": "📦",
-      "entry": "index.html",
-      "files": [
-        "index.html",
-        "script.js",
-        "style.css"
-      ],
-      "publishedAt": "2026-09-01T10:51:38.953Z"
-    },
     "give-me-the-preview-link": {
       "title": "give me the preview link",
       "brief": "give me the preview link",
