@@ -9,6 +9,16 @@
         "index.html"
       ],
       "publishedAt": "2026-09-02T07:27:07.781Z"
+    },
+    "b214-prod-proof": {
+      "title": "B214 prod proof",
+      "brief": "published via the prod API to prove links are verified live before handover",
+      "icon": "📦",
+      "entry": "index.html",
+      "files": [
+        "index.html"
+      ],
+      "publishedAt": "2026-09-04T11:47:52.383Z"
     }
   }
 }
