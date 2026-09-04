@@ -9,6 +9,16 @@
         "index.html"
       ],
       "publishedAt": "2026-09-02T07:27:07.781Z"
+    },
+    "b214-live-check": {
+      "title": "B214 link liveness proof",
+      "brief": "published by test-b214 to prove preview links serve before handover",
+      "icon": "📦",
+      "entry": "index.html",
+      "files": [
+        "index.html"
+      ],
+      "publishedAt": "2026-09-04T10:49:52.606Z"
     }
   }
 }
