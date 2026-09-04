@@ -31,9 +31,9 @@
       "publishedAt": "2026-09-04T12:53:22.895Z"
     },
     "jexi-demo": {
-      "title": "JEXI OS — see what she builds",
-      "brief": "one-message demo: the banking app she built + real screenshots + live links",
-      "icon": "⚡",
+      "title": "JEXI OS — live demo showcase",
+      "brief": "What JEXI OS ships: the Apex mobile banking app built from one sentence.",
+      "icon": "📦",
       "entry": "index.html",
       "files": [
         "index.html",
@@ -41,7 +41,7 @@
         "app-login.png",
         "app-dashboard.png"
       ],
-      "publishedAt": "2026-09-04T13:03:49.310Z"
+      "publishedAt": "2026-09-04T13:28:09.212Z"
     }
   }
 }
