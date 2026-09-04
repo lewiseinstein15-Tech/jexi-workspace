@@ -29,6 +29,19 @@
         "index.html"
       ],
       "publishedAt": "2026-09-04T12:53:22.895Z"
+    },
+    "jexi-demo": {
+      "title": "JEXI OS — see what she builds",
+      "brief": "one-message demo: the banking app she built + real screenshots + live links",
+      "icon": "⚡",
+      "entry": "index.html",
+      "files": [
+        "index.html",
+        "banner.jpg",
+        "app-login.png",
+        "app-dashboard.png"
+      ],
+      "publishedAt": "2026-09-04T13:03:49.310Z"
     }
   }
 }
