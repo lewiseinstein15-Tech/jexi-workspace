@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apex Mobile Banking</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom styling to override/extend Tailwind for smooth mobile feel -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        /* Custom scrollbar hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex justify-center items-center min-h-screen p-0 sm:p-4">
+
+    <!-- Mobile Container Frame Simulation -->
+    <div class="w-full max-w-md h-[100vh] sm:h-[840px] bg-slate-900 sm:rounded-[40px] shadow-2xl overflow-hidden relative border border-slate-800 flex flex-col">
+        
+        <!-- Status Bar (Simulated Mobile Header) -->
+        <div class="bg-slate-950 px-6 pt-3 pb-2 flex justify-between items-center text-xs text-slate-400 font-medium z-50">
+            <div id="statusBarTime">12:30</div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <span class="text-[10px] font-bold">5G</span>
+                <i class="fas fa-battery-three-quarters text-sm text-emerald-400"></i>
+            </div>
+        </div>
+
+        <!-- Notification Toast Toast System -->
+        <div id="notificationToast" class="absolute top-14 left-4 right-4 bg-slate-800/95 backdrop-blur border border-emerald-500/30 p-4 rounded-2xl shadow-xl transform -translate-y-40 opacity-0 transition-all duration-300 z-50 flex items-start space-x-3">
+            <div class="p-2 bg-emerald-500/20 rounded-xl text-emerald-400">
+                <i class="fas fa-bell" id="notificationIcon"></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-semibold text-sm text-white" id="notificationTitle">Success</h4>
+                <p class="text-xs text-slate-400 mt-0.5" id="notificationMessage">Your transaction was completed.</p>
+            </div>
+            <button type="button" onclick="closeNotification()" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xs"></i>
+            </button>
+        </div>
+
+        <!-- SCREEN 1: LOGIN / PIN SCREEN -->
+        <div id="loginScreen" class="flex-1 flex flex-col justify-between p-8 z-10 bg-gradient-to-b from-slate-900 to-slate-950">
+            <div class="flex flex-col items-center mt-12">
+                <!-- App Logo -->
+                <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-300 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/15 mb-4">
+                    <i class="fas fa-feather-alt text-slate-950 text-3xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight text-white">APEX BANK</h1>
+                <p class="text-slate-400 text-sm mt-1">Secure Fintech Intelligence</p>
+            </div>
+
+            <!-- PIN Entry Status -->
+            <div class="flex flex-col items-center my-8">
+                <p class="text-slate-400 text-sm mb-4">Enter security PIN to sign in</p>
+                <div class="flex space-x-4 mb-2">
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-150"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-150"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-150"></div>
+                    <div class="pin-dot w-4 h-4 rounded-full border-2 border-slate-600 transition-all duration-150"></div>
+                </div>
+                <div id="loginErrorMessage" class="text-xs text-rose-500 font-semibold h-4 mt-2 opacity-0 transition-opacity duration-200">Incorrect PIN. Hint: 2026</div>
+            </div>
+
+            <!-- Keypad -->
+            <div class="grid grid-cols-3 gap-y-4 gap-x-8 text-center max-w-xs mx-auto mb-6">
+                <button type="button" onclick="pressKey(1)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">1</button>
+                <button type="button" onclick="pressKey(2)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">2</button>
+                <button type="button" onclick="pressKey(3)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">3</button>
+                <button type="button" onclick="pressKey(4)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">4</button>
+                <button type="button" onclick="pressKey(5)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">5</button>
+                <button type="button" onclick="pressKey(6)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">6</button>
+                <button type="button" onclick="pressKey(7)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">7</button>
+                <button type="button" onclick="pressKey(8)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">8</button>
+                <button type="button" onclick="pressKey(9)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">9</button>
+                <button type="button" onclick="triggerBiometrics()" class="w-16 h-16 rounded-full text-amber-400 active:scale-95 text-xl flex items-center justify-center transition-all"><i class="fas fa-fingerprint text-2xl"></i></button>
+                <button type="button" onclick="pressKey(0)" class="w-16 h-16 rounded-full bg-slate-800/40 hover:bg-slate-800 active:scale-95 text-xl font-semibold flex items-center justify-center transition-all">0</button>
+                <button type="button" onclick="deleteKey()" class="w-16 h-16 rounded-full text-slate-400 active:scale-95 text-xl flex items-center justify-center transition-all"><i class="fas fa-backspace"></i></button>
+            </div>
+
+            <!-- Hint context and bio option -->
+            <div class="text-center">
+                <button type="button" onclick="autoFillPin()" class="text-xs text-amber-400 hover:text-amber-300 font-medium transition-colors">Demo Quick-Bypass (PIN: 2026)</button>
+            </div>
+        </div>
+
+        <!-- APP SHELL: DASHBOARD & NAV (HIDDEN BY DEFAULT) -->
+        <div id="appShell" class="hidden flex-1 flex flex-col overflow-hidden relative bg-slate-950">
+            
+            <!-- Dynamic Screen Title Bar -->
+            <div class="px-6 py-4 flex justify-between items-center bg-slate-900 border-b border-slate-800/60 shrink-0">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500/20 to-amber-300/10 border border-amber-500/20 flex items-center justify-center overflow-hidden">
+                        <span class="text-amber-400 font-bold text-sm">AE</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400">Good day,</p>
+                        <p class="text-sm font-semibold text-white">Alex Einstein</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="showNotifications()" class="relative w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-800 flex items-center justify-center transition-colors">
+                        <i class="fas fa-bell text-slate-300"></i>
+                        <span class="absolute top-2 right-2 w-2,5 h-2.5 bg-amber-500 border-2 border-slate-900 rounded-full"></span>
+                    </button>
+                    <button type="button" onclick="logout()" class="w-10 h-10 rounded-full bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 flex items-center justify-center text-slate-300 transition-all">
+                        <i class="fas fa-power-off"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SCREEN CONTENT WRAPPER -->
+            <div class="flex-1 overflow-y-auto no-scrollbar pb-24 p-6 space-y-6">
+
+                <!-- 1. HOME SCREEN VIEW -->
+                <div id="viewHome" class="space-y-6">
+                    <!-- Card Swiper Simulation -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold tracking-wide text-slate-400 uppercase">My Accounts</h3>
+                            <div class="flex space-x-1.5">
+                                <div class="w-1.5 h-1.5 rounded-full bg-amber-400" id="dot0"></div>
+                                <div class="w-1.5 h-1.5 rounded-full bg-slate-600" id="dot1"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Horizontal scrolling accounts -->
+                        <div class="flex space-x-4 overflow-x-auto no-scrollbar snap-x snap-mandatory" id="accountsWrapper" onscroll="handleAccountScroll(this)">
+                            <!-- Card 1: Checking -->
+                            <div class="snap-center shrink-0 w-[90%] bg-gradient-to-tr from-amber-500 to-amber-600 text-slate-950 p-6 rounded-[28px] flex flex-col justify-between h-48 shadow-lg shadow-amber-500/10">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase opacity-75">Apex Checking</p>
+                                        <p class="text-[10px] opacity-60 mt-0.5">**** 4820</p>
+                                    </div>
+                                    <i class="fas fa-feather-alt text-2xl opacity-80"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs opacity-75">Available Balance</p>
+                                    <p class="text-3xl font-bold tracking-tight mt-1" id="checkingBalDisplay">$5,420.50</p>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px] font-semibold pt-2 border-t border-slate-950/10">
+                                    <span>Active Card</span>
+                                    <span class="bg-slate-950/10 px-2 py-0.5 rounded-md">VISA Platinum</span>
+                                </div>
+                            </div>
+                            <!-- Card 2: Savings -->
+                            <div class="snap-center shrink-0 w-[90%] bg-gradient-to-tr from-slate-800 to-slate-700 text-slate-100 p-6 rounded-[28px] flex flex-col justify-between h-48 shadow-lg border border-slate-700/50">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs font-semibold uppercase opacity-75 text-amber-400">Apex High-Yield Savings</p>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">**** 9912</p>
+                                    </div>
+                                    <i class="fas fa-piggy-bank text-2xl text-amber-400"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400">Total Savings</p>
+                                    <p class="text-3xl font-bold tracking-tight mt-1" id="savingsBalDisplay">$12,850.20</p>
+                                </div>
+                                <div class="flex justify-between items-center text-[11px] font-semibold pt-2 border-t border-slate-800">
+                                    <span class="text-emerald-400">+4.25% APY</span>
+                                    <span class="bg-slate-900 px-2 py-0.5 rounded-md text-amber-400">Preferred Gold</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Services / Actions Grid -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold tracking-wide text-slate-400 uppercase">Quick Actions</h3>
+                        <div class="grid grid-cols-4 gap-3">
+                            <button type="button" onclick="navigateTo('transfer')" class="bg-slate-900 hover:bg-slate-850 p-4 rounded-2xl flex flex-col items-center justify-center transition-colors border border-slate-800">
+                                <div class="w-10 h-10 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center mb-2">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                                <span class="text-[11px] font-medium text-slate-300 text-center">Transfer</span>
+                            </button>
+                            <button type="button" onclick="openBillPayModal()" class="bg-slate-900 hover:bg-slate-850 p-4 rounded-2xl flex flex-col items-center justify-center transition-colors border border-slate-800">
+                                <div class="w-10 h-10 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-2">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <span class="text-[11px] font-medium text-slate-300 text-center">Pay Bills</span>
+                            </button>
+                            <button type="button" onclick="openCheckDepositModal()" class="bg-slate-900 hover:bg-slate-850 p-4 rounded-2xl flex flex-col items-center justify-center transition-colors border border-slate-800">
+                                <div class="w-10 h-10 rounded-full bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-2">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <span class="text-[11px] font-medium text-slate-300 text-center">Deposit</span>
+                            </button>
+                            <button type="button" onclick="openCardControlsModal()" class="bg-slate-900 hover:bg-slate-850 p-4 rounded-2xl flex flex-col items-center justify-center transition-colors border border-slate-800">
+                                <div class="w-10 h-10 rounded-full bg-pink-500/10 text-pink-400 flex items-center justify-center mb-2">
+                                    <i class="fas fa-sliders-h"></i>
+                                </div>
+                                <span class="text-[11px] font-medium text-slate-300 text-center">Cards</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Transactions list header with filtering -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-sm font-bold tracking-wide text-slate-400 uppercase">Transactions</h3>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" onclick="filterTransactions('all')" id="btnFilterAll" class="px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-500 text-slate-950 transition-all">All</button>
+                                <button type="button" onclick="filterTransactions('expense')" id="btnFilterExpense" class="px-3 py-1 rounded-full text-[10px] font-semibold bg-slate-900 text-slate-400 transition-all">Out</button>
+                                <button type="button" onclick="filterTransactions('income')" id="btnFilterIncome" class="px-3 py-1 rounded-full text-[10px] font-semibold bg-slate-900 text-slate-400 transition-all">In</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Transactions Dynamic Render Container -->
+                        <div id="transactionsContainer" class="space-y-3">
+                            <!-- Javascript injection -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. TRANSFER SCREEN VIEW -->
+                <div id="viewTransfer" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Send & Transfer</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Move funds immediately with secure validation</p>
+                    </div>
+
+                    <!-- Source Selection -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wide">From Account</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" id="btnSourceChecking" onclick="selectSource('checking')" class="p-4 rounded-2xl bg-amber-500 text-slate-950 text-left transition-all border border-transparent">
+                                <p class="text-xs font-semibold opacity-85">Apex Checking</p>
+                                <p class="text-lg font-bold mt-1" id="transferSourceCheckingBal">$5,420.50</p>
+                            </button>
+                            <button type="button" id="btnSourceSavings" onclick="selectSource('savings')" class="p-4 rounded-2xl bg-slate-900 text-slate-300 text-left transition-all border border-slate-800/80">
+                                <p class="text-xs font-semibold opacity-85">Apex Savings</p>
+                                <p class="text-lg font-bold mt-1" id="transferSourceSavingsBal">$12,850.20</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Destination Picker -->
+                    <div class="space-y-3">
+                        <label class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Select Recipient</label>
+                        
+                        <!-- Recent Contacts List -->
+                        <div class="flex space-x-3 overflow-x-auto no-scrollbar py-1">
+                            <button type="button" onclick="selectContact('Sarah Jenkins', 'Apex checking ending 9012')" class="shrink-0 flex flex-col items-center space-y-1.5">
+                                <div class="w-12 h-12 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/20 flex items-center justify-center font-bold text-sm">SJ</div>
+                                <span class="text-[11px] text-slate-300 font-medium">Sarah</span>
+                            </button>
+                            <button type="button" onclick="selectContact('Marcus Aurelius', 'Global Union ending 0311')" class="shrink-0 flex flex-col items-center space-y-1.5">
+                                <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold text-sm">MA</div>
+                                <span class="text-[11px] text-slate-300 font-medium">Marcus</span>
+                            </button>
+                            <button type="button" onclick="selectContact('Emma Watson', 'Apex savings ending 4402')" class="shrink-0 flex flex-col items-center space-y-1.5">
+                                <div class="w-12 h-12 rounded-full bg-pink-500/20 text-pink-400 border border-pink-500/20 flex items-center justify-center font-bold text-sm">EW</div>
+                                <span class="text-[11px] text-slate-300 font-medium">Emma</span>
+                            </button>
+                            <button type="button" onclick="selectContact('David Beckham', 'Chase Bank ending 5510')" class="shrink-0 flex flex-col items-center space-y-1.5">
+                                <div class="w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold text-sm">DB</div>
+                                <span class="text-[11px] text-slate-300 font-medium">David</span>
+                            </button>
+                        </div>
+
+                        <!-- Interactive Form Fields -->
+                        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-4">
+                            <div>
+                                <label class="text-[10px] font-semibold text-slate-400 uppercase block mb-1">Recipient Name</label>
+                                <input type="text" id="recipientName" placeholder="Enter recipient name" class="w-full bg-slate-950 text-white border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-semibold text-slate-400 uppercase block mb-1">Routing/Account Number or Email</label>
+                                <input type="text" id="recipientDetails" placeholder="Details or Routing ID" class="w-full bg-slate-950 text-white border border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-500 transition-colors">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-semibold text-slate-400 uppercase block mb-1">Amount ($)</label>
+                                <div class="relative">
+                                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-semibold">$</span>
+                                    <input type="number" step="0.01" min="1" id="transferAmount" placeholder="0.00" class="w-full bg-slate-950 text-white border border-slate-800 rounded-xl pl-7 pr-3 py-2 text-sm focus:outline-none focus:border-amber-500 font-mono tracking-wide">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Execute Button -->
+                    <button type="button" onclick="processTransfer()" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-3.5 px-4 rounded-2xl shadow-lg transition-all flex items-center justify-center space-x-2">
+                        <span>Send Security Code & Authorize</span>
+                        <i class="fas fa-arrow-right text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- 3. ANALYTICS / SPENDING CHART SCREEN VIEW -->
+                <div id="viewAnalytics" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Insights & Spending</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Dynamic visualization of outbound activity</p>
+                    </div>
+
+                    <!-- Visual Spending Breakdown (Custom Styled HTML/CSS/SVG graph) -->
+                    <div class="bg-slate-900 rounded-[28px] p-6 border border-slate-800/80 space-y-4 shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-slate-400">This Month Outflows</p>
+                                <h3 class="text-2xl font-bold text-white mt-1">$1,424.15</h3>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-lg">-12.4% vs last month</span>
+                        </div>
+
+                        <!-- Custom SVG Line Graph representation -->
+                        <div class="relative h-32 w-full pt-4">
+                            <svg class="w-full h-full overflow-visible" viewBox="0 0 300 100" preserveAspectRatio="none">
+                                <defs>
+                                    <linearGradient id="graphGrad" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.4" />
+                                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0" />
+                                    </linearGradient>
+                                </defs>
+                                <!-- Grid Lines -->
+                                <line x1="0" y1="20" x2="300" y2="20" stroke="#1e293b" stroke-dasharray="4" stroke-width="0.5" />
+                                <line x1="0" y1="60" x2="300" y2="60" stroke="#1e293b" stroke-dasharray="4" stroke-width="0.5" />
+                                <line x1="0" y1="100" x2="300" y2="100" stroke="#1e293b" stroke-width="0.5" />
+                                <!-- Area Path -->
+                                <path d="M0,90 Q40,60 80,75 T160,30 T240,45 T300,10 L300,100 L0,100 Z" fill="url(#graphGrad)" />
+                                <!-- Line Path -->
+                                <path d="M0,90 Q40,60 80,75 T160,30 T240,45 T300,10" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" />
+                                <!-- Interactive dot marker representing current month -->
+                                <circle cx="300" cy="10" r="5" fill="#f59e0b" stroke="#fff" stroke-width="1.5" />
+                            </svg>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                            <span>Apr</span>
+                            <span>May</span>
+                            <span>Jun</span>
+                            <span>Jul</span>
+                            <span>Aug</span>
+                            <span class="text-amber-400">Sep</span>
+                        </div>
+                    </div>
+
+                    <!-- Category Breakdown -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold tracking-wide text-slate-400 uppercase">Top Categories</h3>
+                        
+                        <div class="space-y-3">
+                            <!-- Dining & Cafes -->
+                            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800/80 flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-400 flex items-center justify-center"><i class="fas fa-utensils"></i></div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">Food & Dining</p>
+                                        <div class="w-24 bg-slate-800 h-1.5 rounded-full mt-1.5">
+                                            <div class="bg-orange-400 h-1.5 rounded-full" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-white">$540.20</p>
+                                    <p class="text-[10px] text-slate-500">38 transactions</p>
+                                </div>
+                            </div>
+
+                            <!-- Utilities & Subs -->
+                            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800/80 flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-violet-500/10 text-violet-400 flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">Utilities & Services</p>
+                                        <div class="w-24 bg-slate-800 h-1.5 rounded-full mt-1.5">
+                                            <div class="bg-violet-400 h-1.5 rounded-full" style="width: 45%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-white">$382.45</p>
+                                    <p class="text-[10px] text-slate-500">12 transactions</p>
+                                </div>
+                            </div>
+
+                            <!-- Entertainment & Shopping -->
+                            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800/80 flex justify-between items-center">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center"><i class="fas fa-shopping-bag"></i></div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white">Shopping</p>
+                                        <div class="w-24 bg-slate-800 h-1.5 rounded-full mt-1.5">
+                                            <div class="bg-rose-400 h-1.5 rounded-full" style="width: 30%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-bold text-white">$251.50</p>
+                                    <p class="text-[10px] text-slate-500">18 transactions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. SETTINGS & SECURITY SCREEN VIEW -->
+                <div id="viewSettings" class="hidden space-y-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Account Controls</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Manage secure credentials and active credentials</p>
+                    </div>
+
+                    <!-- Security Checklist / Preferences -->
+                    <div class="bg-slate-900 rounded-[28px] p-6 border border-slate-800/80 space-y-4">
+                        <h3 class="text-sm font-bold text-white mb-2"><i class="fas fa-shield-alt text-amber-400 mr-2"></i>Biometric Shielding</h3>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-800">
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">Face ID / Touch ID</p>
+                                <p class="text-xs text-slate-500">One-click rapid verification check</p>
+                            </div>
+                            <div class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="bioSwitch" class="sr-only peer" checked>
+                                <div onclick="toggleBiometricsConfig()" class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">Instant Transaction Alerts</p>
+                                <p class="text-xs text-slate-500">Push notifications for every purchase</p>
+                            </div>
+                            <div class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="notifSwitch" class="sr-only peer" checked>
+                                <div onclick="toggleNotificationsConfig()" class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats Info Card -->
+                    <div class="p-6 bg-amber-500/5 border border-amber-500/10 rounded-[28px] text-center space-y-2">
+                        <i class="fas fa-info-circle text-amber-400 text-lg"></i>
+                        <h4 class="text-sm font-bold text-white">Latest System Patch Applied</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">Your Apex Security Gateway is updated to v4.912, complying with direct 2026 quantum cryptography specifications.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NAV BOTTOM BAR -->
+            <div class="absolute bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800/80 px-6 py-4 flex justify-between items-center shrink-0 z-40">
+                <button type="button" onclick="navigateTo('home')" id="navBtnHome" class="flex flex-col items-center space-y-1 text-amber-400 transition-colors">
+                    <i class="fas fa-wallet text-lg"></i>
+                    <span class="text-[10px] font-bold">Assets</span>
+                </button>
+                <button type="button" onclick="navigateTo('transfer')" id="navBtnTransfer" class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300 transition-colors">
+                    <i class="fas fa-paper-plane text-lg"></i>
+                    <span class="text-[10px] font-medium">Transfer</span>
+                </button>
+                <button type="button" onclick="navigateTo('analytics')" id="navBtnAnalytics" class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300 transition-colors">
+                    <i class="fas fa-chart-pie text-lg"></i>
+                    <span class="text-[10px] font-medium">Insights</span>
+                </button>
+                <button type="button" onclick="navigateTo('settings')" id="navBtnSettings" class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300 transition-colors">
+                    <i class="fas fa-cog text-lg"></i>
+                    <span class="text-[10px] font-medium">Security</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SUB-MODAL 1: BILL PAY -->
+        <div id="modalBillPay" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col p-6 overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-white">Pay Utility / Bill</h2>
+                <button type="button" onclick="closeBillPayModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs font-semibold text-slate-400 uppercase block mb-1">Biller Category</label>
+                    <select id="billerCategory" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none">
+                        <option value="electric">Apex Power Grid (Electricity)</option>
+                        <option value="internet">High-Speed Fiber BroadBand</option>
+                        <option value="insurance">Universal Guard Health Premium</option>
+                        <option value="rent">Apex Properties Leasehold</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-400 uppercase block mb-1">Reference/Account Code</label>
+                    <input type="text" id="billReference" placeholder="e.g. APX-990-21" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-400 uppercase block mb-1">Amount to Disburse ($)</label>
+                    <input type="number" id="billAmount" placeholder="0.00" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none font-mono">
+                </div>
+                <button type="button" onclick="executeBillPay()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 px-4 rounded-xl shadow-lg transition-colors mt-4">Disburse From Checking</button>
+            </div>
+        </div>
+
+        <!-- SUB-MODAL 2: CHECK DEPOSIT -->
+        <div id="modalCheckDeposit" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col p-6 overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-white">Remote Check Deposit</h2>
+                <button type="button" onclick="closeCheckDepositModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4">
+                <p class="text-xs text-slate-400 leading-relaxed">Scan checking credentials using instant optical camera OCR extraction.</p>
+                <!-- Scan UI Simulation -->
+                <div class="w-full aspect-video bg-slate-900 rounded-2xl border-2 border-dashed border-indigo-500/40 relative flex flex-col items-center justify-center overflow-hidden" id="cameraView">
+                    <i class="fas fa-qrcode text-indigo-400 text-3xl mb-2" id="scanIcon"></i>
+                    <p class="text-[11px] text-slate-400" id="scanStatusText">Press start scanning alignment</p>
+                    <div class="absolute inset-4 border border-indigo-500/20 rounded pointer-events-none" id="scanGuideline"></div>
+                    <!-- Laser Scanner effect -->
+                    <div class="absolute left-0 right-0 h-0.5 bg-indigo-500 opacity-0 transition-opacity duration-300 shadow shadow-indigo-500" id="scanLaser"></div>
+                </div>
+                <div>
+                    <button type="button" onclick="triggerScan()" id="btnScanAction" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition-colors">Align Check & Take Image</button>
+                </div>
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3">
+                    <div>
+                        <label class="text-[10px] font-semibold text-slate-400 uppercase block mb-1">Deposit Target Account</label>
+                        <select id="depositAccount" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white">
+                            <option value="checking">Apex Checking</option>
+                            <option value="savings">Apex Savings</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-semibold text-slate-400 uppercase block mb-1">Recognized Check Amount ($)</label>
+                        <input type="number" id="depositAmount" placeholder="500.00" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-white font-mono">
+                    </div>
+                </div>
+                <button type="button" onclick="executeDeposit()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl shadow-lg text-sm transition-colors">Submit Electronic Deposit</button>
+            </div>
+        </div>
+
+        <!-- SUB-MODAL 3: CARD CONTROLS -->
+        <div id="modalCardControls" class="hidden absolute inset-0 bg-slate-950/95 backdrop-blur-md z-50 flex flex-col p-6 overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-white">Card Settings</h2>
+                <button type="button" onclick="closeCardControlsModal()" class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-6">
+                <!-- Credit/Debit Card Visual representation -->
+                <div class="bg-gradient-to-tr from-pink-500 to-indigo-600 text-white p-6 rounded-[24px] flex flex-col justify-between h-40 shadow-xl">
+                    <div class="flex justify-between items-start">
+                        <span class="text-xs font-semibold tracking-widest uppercase">DEBIT PLUS</span>
+                        <i class="fab fa-cc-visa text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-mono tracking-widest">4012 8812 4020 9912</p>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px]">
+                        <div>
+                            <p class="opacity-65">HOLDER</p>
+                            <p class="font-semibold">ALEX EINSTEIN</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="opacity-65">EXPIRES</p>
+                            <p class="font-semibold">11/30</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Switches -->
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-2 border-b border-slate-800">
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">Lock Physical Card</p>
+                            <p class="text-xs text-slate-500">Instantly freeze offline purchasing capabilities</p>
+                        </div>
+                        <button type="button" onclick="toggleCardLock()" id="btnCardLock" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 transition-colors">Unlocked</button>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-slate-800">
+                        <div>
+                            <p class="text-sm font-medium text-slate-200">International Operations</p>
+                            <p class="text-xs text-slate-500">Enables/disables outer zone currency clearance</p>
+                        </div>
+                        <button type="button" onclick="toggleInternational()" id="btnInternational" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 transition-colors">Allowed</button>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCardControlsModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3 px-4 rounded-xl text-sm transition-colors">Done</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        // 1. STATE CONFIGURATION
+        let state = {
+            currentScreen: 'login',
+            balances: {
+                checking: 5420.50,
+                savings: 12850.20
+            },
+            transactions: [
+                { id: 1, date: 'Today, 10:45 AM', merchant: 'Apex Market Subs', category: 'Food & Dining', amount: -24.50, type: 'expense' },
+                { id: 2, date: 'Today, 8:12 AM', merchant: 'Weekly Salary Payout', category: 'Income', amount: 1540.00, type: 'income' },
+                { id: 3, date: 'Yesterday', merchant: 'Power Grid Co.', category: 'Utilities & Services', amount: -112.45, type: 'expense' },
+                { id: 4, date: 'Aug 30, 2026', merchant: 'Netflix Subscriptions', category: 'Utilities & Services', amount: -15.99, type: 'expense' },
+                { id: 5, date: 'Aug 28, 2026', merchant: 'Apex Properties LLC', category: 'Shopping', amount: -200.00, type: 'expense' },
+                { id: 6, date: 'Aug 27, 2026', merchant: 'Bonus Deposit', category: 'Income', amount: 500.00, type: 'income' }
+            ],
+            transactionFilter: 'all',
+            pinCode: '',
+            isCardLocked: false,
+            isInternationalEnabled: true,
+            selectedSource: 'checking'
+        };
+
+        // 2. DEVICE CLOCK UPDATE
+        function updateClock() {
+            const clockElement = document.getElementById('statusBarTime');
+            const now = new Date();
+            let hrs = now.getUTCHours();
+            let mins = now.getUTCMinutes();
+            // Format time accurately matching the 2026 spec
+            hrs = hrs < 10 ? '0' + hrs : hrs;
+            mins = mins < 10 ? '0' + mins : mins;
+            clockElement.innerText = `${hrs}:${mins}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. SECURE PIN PAD SYSTEM
+        function pressKey(num) {
+            if (state.pinCode.length < 4) {
+                state.pinCode += num;
+                updatePinDisplay();
+                if (state.pinCode.length === 4) {
+                    setTimeout(verifyPin, 300);
+                }
+            }
+        }
+
+        function deleteKey() {
+            state.pinCode = state.pinCode.slice(0, -1);
+            updatePinDisplay();
+            document.getElementById('loginErrorMessage').classList.add('opacity-0');
+        }
+
+        function updatePinDisplay() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < state.pinCode.length) {
+                    dot.classList.add('bg-amber-400', 'border-amber-400', 'scale-110');
+                } else {
+                    dot.classList.remove('bg-amber-400', 'border-amber-400', 'scale-110');
+                }
+            });
+        }
+
+        function verifyPin() {
+            if (state.pinCode === '2026') {
+                unlockApp();
+            } else {
+                // Reset entry with vibration styling indicator
+                const dots = document.querySelectorAll('.pin-dot');
+                dots.forEach(dot => dot.classList.add('bg-rose-500', 'border-rose-500'));
+                document.getElementById('loginErrorMessage').classList.remove('opacity-0');
+                setTimeout(() => {
+                    state.pinCode = '';
+                    updatePinDisplay();
+                    dots.forEach(dot => dot.classList.remove('bg-rose-500', 'border-rose-500'));
+                }, 800);
+            }
+        }
+
+        function autoFillPin() {
+            state.pinCode = '2026';
+            updatePinDisplay();
+            setTimeout(verifyPin, 150);
+        }
+
+        function triggerBiometrics() {
+            showToast('Authentication', 'Simulating Biometrics Scan... Accepted!', 'fa-fingerprint');
+            setTimeout(unlockApp, 1000);
+        }
+
+        function unlockApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appShell').classList.remove('hidden');
+            renderBalances();
+            renderTransactions();
+            showToast('Secure Entrance', 'Identity verified using quantum credentials.', 'fa-shield-halved');
+        }
+
+        function logout() {
+            state.pinCode = '';
+            updatePinDisplay();
+            document.getElementById('loginErrorMessage').classList.add('opacity-0');
+            document.getElementById('appShell').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+        }
+
+        // 4. TOAST NOTIFICATION ENGINE
+        function showToast(title, msg, icon = 'fa-bell') {
+            const toast = document.getElementById('notificationToast');
+            document.getElementById('notificationTitle').innerText = title;
+            document.getElementById('notificationMessage').innerText = msg;
+            
+            const iconEl = document.getElementById('notificationIcon');
+            iconEl.className = `fas ${icon}`;
+            
+            toast.classList.remove('-translate-y-40', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(closeNotification, 4000);
+        }
+
+        function closeNotification() {
+            const toast = document.getElementById('notificationToast');
+            toast.classList.add('-translate-y-40', 'opacity-0');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+        }
+
+        // 5. TRANSACTION RENDER & FILTER ENGINE
+        function renderTransactions() {
+            const container = document.getElementById('transactionsContainer');
+            container.innerHTML = '';
+            
+            const filtered = state.transactions.filter(t => {
+                if (state.transactionFilter === 'all') return true;
+                return t.type === state.transactionFilter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-500">No activity match found</div>`;
+                return;
+            }
+
+            filtered.forEach(tx => {
+                const isExpense = tx.amount < 0;
+                const amountStr = isExpense 
+                    ? `-$${Math.abs(tx.amount).toFixed(2)}` 
+                    : `+$${tx.amount.toFixed(2)}`;
+                const amountColorClass = isExpense ? 'text-white' : 'text-emerald-400 font-semibold';
+                
+                // Category icons mapping
+                let categoryIcon = 'fa-receipt';
+                let bgIconClass = 'bg-slate-800/80 text-slate-400';
+                if (tx.category === 'Food & Dining') {
+                    categoryIcon = 'fa-utensils';
+                    bgIconClass = 'bg-orange-500/10 text-orange-400';
+                } else if (tx.category === 'Utilities & Services') {
+                    categoryIcon = 'fa-bolt';
+                    bgIconClass = 'bg-violet-500/10 text-violet-400';
+                } else if (tx.category === 'Income') {
+                    categoryIcon = 'fa-wallet';
+                    bgIconClass = 'bg-emerald-500/10 text-emerald-400';
+                } else if (tx.category === 'Shopping') {
+                    categoryIcon = 'fa-shopping-bag';
+                    bgIconClass = 'bg-rose-500/10 text-rose-400';
+                }
+
+                const txElement = document.createElement('div');
+                txElement.className = "bg-slate-900/60 rounded-2xl p-4 flex justify-between items-center border border-slate-850 hover:bg-slate-850 transition-all duration-150";
+                txElement.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl ${bgIconClass} flex items-center justify-center">
+                            <i class="fas ${categoryIcon} text-sm"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-white">${tx.merchant}</p>
+                            <p class="text-[10px] text-slate-500">${tx.date}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm ${amountColorClass}">${amountStr}</p>
+                        <p class="text-[9px] text-slate-400 uppercase tracking-wide">${tx.category}</p>
+                    </div>
+                `;
+                container.appendChild(txElement);
+            });
+        }
+
+        function filterTransactions(filter) {
+            state.transactionFilter = filter;
+            ['All', 'Expense', 'Income'].forEach(btn => {
+                const el = document.getElementById(`btnFilter${btn}`);
+                if (btn.toLowerCase() === filter) {
+                    el.className = "px-3 py-1 rounded-full text-[10px] font-semibold bg-amber-500 text-slate-950 transition-all";
+                } else {
+                    el.className = "px-3 py-1 rounded-full text-[10px] font-semibold bg-slate-900 text-slate-400 transition-all";
+                }
+            });
+            renderTransactions();
+        }
+
+        // 6. VIEW SWITCHER
+        function navigateTo(targetView) {
+            const views = ['Home', 'Transfer', 'Analytics', 'Settings'];
+            views.forEach(v => {
+                const viewElement = document.getElementById(`view${v}`);
+                const btnElement = document.getElementById(`navBtn${v}`);
+                if (v.toLowerCase() === targetView) {
+                    viewElement.classList.remove('hidden');
+                    btnElement.className = "flex flex-col items-center space-y-1 text-amber-400 transition-colors";
+                    btnElement.querySelector('span').className = "text-[10px] font-bold";
+                } else {
+                    viewElement.classList.add('hidden');
+                    btnElement.className = "flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300 transition-colors";
+                    btnElement.querySelector('span').className = "text-[10px] font-medium";
+                }
+            });
+            if (targetView === 'transfer') {
+                updateTransferBalances();
+            }
+        }
+
+        // 7. CARD HORIZONTAL SWIPING EFFECT ACTIONS
+        function handleAccountScroll(element) {
+            const scrollFraction = element.scrollLeft / element.offsetWidth;
+            const activeIndex = Math.round(scrollFraction);
+            ['dot0', 'dot1'].forEach((dotId, index) => {
+                const el = document.getElementById(dotId);
+                if (index === activeIndex) {
+                    el.className = "w-1.5 h-1.5 rounded-full bg-amber-400 transition-colors";
+                } else {
+                    el.className = "w-1.5 h-1.5 rounded-full bg-slate-600 transition-colors";
+                }
+            });
+        }
+
+        // 8. DYNAMIC BALANCES MANAGEMENT
+        function renderBalances() {
+            document.getElementById('checkingBalDisplay').innerText = `$${state.balances.checking.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('savingsBalDisplay').innerText = `$${state.balances.savings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function updateTransferBalances() {
+            document.getElementById('transferSourceCheckingBal').innerText = `$${state.balances.checking.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('transferSourceSavingsBal').innerText = `$${state.balances.savings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        // 9. TRANSFER SECURITY ACTIONS & DEPOSIT SIMULATIONS
+        function selectSource(accountType) {
+            state.selectedSource = accountType;
+            const checkingBtn = document.getElementById('btnSourceChecking');
+            const savingsBtn = document.getElementById('btnSourceSavings');
+            
+            if (accountType === 'checking') {
+                checkingBtn.className = "p-4 rounded-2xl bg-amber-500 text-slate-950 text-left transition-all border border-transparent";
+                savingsBtn.className = "p-4 rounded-2xl bg-slate-900 text-slate-300 text-left transition-all border border-slate-800/80";
+            } else {
+                savingsBtn.className = "p-4 rounded-2xl bg-amber-500 text-slate-950 text-left transition-all border border-transparent";
+                checkingBtn.className = "p-4 rounded-2xl bg-slate-900 text-slate-300 text-left transition-all border border-slate-800/80";
+            }
+        }
+
+        function selectContact(name, description) {
+            document.getElementById('recipientName').value = name;
+            document.getElementById('recipientDetails').value = description;
+            showToast('Contact Auto-Filled', `Ready to disburse assets securely to ${name}`, 'fa-user-check');
+        }
+
+        function processTransfer() {
+            const name = document.getElementById('recipientName').value.trim();
+            const details = document.getElementById('recipientDetails').value.trim();
+            const amt = parseFloat(document.getElementById('transferAmount').value);
+
+            if (!name || !details || isNaN(amt) || amt <= 0) {
+                showToast('Input Mismatch', 'Complete security parameters correctly before sending.', 'fa-exclamation-triangle');
+                return;
+            }
+
+            // Limit checking
+            const limit = state.balances[state.selectedSource];
+            if (amt > limit) {
+                showToast('Insufficient Capital', 'This ledger limit exceeds the target transaction quantity.', 'fa-ban');
+                return;
+            }
+
+            // Complete transfer
+            state.balances[state.selectedSource] -= amt;
+            
+            // Add transaction dynamically to front
+            const newTx = {
+                id: state.transactions.length + 1,
+                date: 'Just now',
+                merchant: name,
+                category: 'Shopping',
+                amount: -amt,
+                type: 'expense'
+            };
+            state.transactions.unshift(newTx);
+
+            // Reset Inputs
+            document.getElementById('recipientName').value = '';
+            document.getElementById('recipientDetails').value = '';
+            document.getElementById('transferAmount').value = '';
+
+            // Render visual balance updates
+            renderBalances();
+            renderTransactions();
+            navigateTo('home');
+            showToast('Transfer Certified', `$${amt.toFixed(2)} dispatched safely to ${name}.`, 'fa-shield-halved');
+        }
+
+        // 10. BILL DISBURSEMENT MODAL
+        function openBillPayModal() {
+            document.getElementById('modalBillPay').classList.remove('hidden');
+        }
+
+        function closeBillPayModal() {
+            document.getElementById('modalBillPay').classList.add('hidden');
+        }
+
+        function executeBillPay() {
+            const billerSelect = document.getElementById('billerCategory');
+            const billerName = billerSelect.options[billerSelect.selectedIndex].text;
+            const amt = parseFloat(document.getElementById('billAmount').value);
+
+            if (isNaN(amt) || amt <= 0) {
+                showToast('Verification Failure', 'Incomplete billing sum identifier.', 'fa-circle-xmark');
+                return;
+            }
+
+            if (state.balances.checking < amt) {
+                showToast('Overdrawn Asset Warning', 'Checking credentials have restricted capabilities.', 'fa-exclamation-circle');
+                return;
+            }
+
+            state.balances.checking -= amt;
+            
+            const newTx = {
+                id: state.transactions.length + 1,
+                date: 'Just now',
+                merchant: billerName,
+                category: 'Utilities & Services',
+                amount: -amt,
+                type: 'expense'
+            };
+            state.transactions.unshift(newTx);
+
+            renderBalances();
+            renderTransactions();
+            closeBillPayModal();
+            document.getElementById('billAmount').value = '';
+            showToast('Utility Disbursed', `Payment of $${amt.toFixed(2)} credited cleanly.`, 'fa-money-bill-wave');
+        }
+
+        // 11. CHECK SCANNING MODULE (SIMULATOR)
+        let isScanning = false;
+        function openCheckDepositModal() {
+            document.getElementById('modalCheckDeposit').classList.remove('hidden');
+        }
+
+        function closeCheckDepositModal() {
+            document.getElementById('modalCheckDeposit').classList.add('hidden');
+            resetScanSimulator();
+        }
+
+        function triggerScan() {
+            if (isScanning) return;
+            isScanning = true;
+            const scannerLine = document.getElementById('scanLaser');
+            const cameraView = document.getElementById('cameraView');
+            const actionBtn = document.getElementById('btnScanAction');
+            const scanStatus = document.getElementById('scanStatusText');
+            const scanIcon = document.getElementById('scanIcon');
+
+            actionBtn.disabled = true;
+            actionBtn.innerText = 'Analyzing Image Matrix...';
+            scanStatus.innerText = 'Scanning Check Borders...';
+            scanIcon.className = 'fas fa-spinner fa-spin text-indigo-400 text-3xl mb-2';
+            scannerLine.className = 'absolute left-0 right-0 h-0.5 bg-indigo-500 shadow shadow-indigo-500 w-full animate-bounce';
+
+            setTimeout(() => {
+                scannerLine.className = 'absolute left-0 right-0 h-0.5 bg-indigo-500 opacity-0';
+                scanIcon.className = 'fas fa-check-circle text-emerald-400 text-3xl mb-2';
+                scanStatus.innerText = 'Matrix Alignment Successful! Verified';
+                actionBtn.innerText = 'Completed Alignment';
+                showToast('Scan Extraction Complete', 'Check visual recognized at target $500.00.', 'fa-circle-check');
+            }, 2500);
+        }
+
+        function resetScanSimulator() {
+            isScanning = false;
+            document.getElementById('btnScanAction').disabled = false;
+            document.getElementById('btnScanAction').innerText = 'Align Check & Take Image';
+            document.getElementById('scanStatusText').innerText = 'Press start scanning alignment';
+            document.getElementById('scanIcon').className = 'fas fa-qrcode text-indigo-400 text-3xl mb-2';
+            document.getElementById('scanLaser').className = 'absolute left-0 right-0 h-0.5 bg-indigo-500 opacity-0';
+        }
+
+        function executeDeposit() {
+            const targetAcc = document.getElementById('depositAccount').value;
+            const amt = parseFloat(document.getElementById('depositAmount').value) || 500.00;
+
+            state.balances[targetAcc] += amt;
+            
+            const newTx = {
+                id: state.transactions.length + 1,
+                date: 'Just now',
+                merchant: 'Remote Check Credit',
+                category: 'Income',
+                amount: amt,
+                type: 'income'
+            };
+            state.transactions.unshift(newTx);
+
+            renderBalances();
+            renderTransactions();
+            closeCheckDepositModal();
+            showToast('Deposit Transferred', `Clearing process commenced for $${amt.toFixed(2)}.`, 'fa-circle-dollar-to-slot');
+        }
+
+        // 12. SPECIAL CARD CONTROLS SYSTEM
+        function openCardControlsModal() {
+            document.getElementById('modalCardControls').classList.remove('hidden');
+        }
+
+        function closeCardControlsModal() {
+            document.getElementById('modalCardControls').classList.add('hidden');
+        }
+
+        function toggleCardLock() {
+            state.isCardLocked = !state.isCardLocked;
+            const lockBtn = document.getElementById('btnCardLock');
+            if (state.isCardLocked) {
+                lockBtn.innerText = 'Locked';
+                lockBtn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-rose-500 text-white transition-colors";
+                showToast('Card Locked', 'Your visa card has been immediately put out of action.', 'fa-lock');
+            } else {
+                lockBtn.innerText = 'Unlocked';
+                lockBtn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 transition-colors";
+                showToast('Card Active', 'Your visa card is now back active online.', 'fa-lock-open');
+            }
+        }
+
+        function toggleInternational() {
+            state.isInternationalEnabled = !state.isInternationalEnabled;
+            const intBtn = document.getElementById('btnInternational');
+            if (state.isInternationalEnabled) {
+                intBtn.innerText = 'Allowed';
+                intBtn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 transition-colors";
+                showToast('International Clear', 'World transactions initialized successfully.', 'fa-globe');
+            } else {
+                intBtn.innerText = 'Blocked';
+                intBtn.className = "px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 transition-colors";
+                showToast('International Bound', 'World transactions strictly locked offline.', 'fa-globe-americas');
+            }
+        }
+
+        function toggleBiometricsConfig() {
+            const bioStatus = document.getElementById('bioSwitch').checked;
+            showToast('Biometrics Adjusted', `Bio-shield has been configured to ${!bioStatus ? 'enabled' : 'disabled'}.`, 'fa-fingerprint');
+        }
+
+        function toggleNotificationsConfig() {
+            const alertStatus = document.getElementById('notifSwitch').checked;
+            showToast('Alert System Action', `Notifications turned to ${!alertStatus ? 'enabled' : 'disabled'}.`, 'fa-comment-alt');
+        }
+
+        // Push generic notifications warning simulated for the interface
+        function showNotifications() {
+            showToast('Apex Notifications', 'Your balance yields are calculated perfectly for this fiscal month.', 'fa-info-circle');
+        }
+    </script>
+</body>
+</html>
